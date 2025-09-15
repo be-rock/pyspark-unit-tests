@@ -14,6 +14,10 @@ build-images: ## build the container image(s)
 	$(CMD) build -t $(IMAGE_NAME)-3.5 --file Containerfile.3.5 .
 	$(CMD) build -t $(IMAGE_NAME)-4.0 --file Containerfile.4.0 .
 
+.PHONY: fmt
+fmt: ## format python files
+	uv format
+
 .PHONY: setup
 setup: ## setup the basic project structure
 	mkdir -p tests/ && touch Containerfile tests/test_pyspark.py

@@ -14,7 +14,8 @@ RUN uv init && \
     uv sync
 
 ENV PYSPARK_PYTHON=.venv/bin/python
+ENV SPARK_VERSION=3.5.6
 
 COPY tests/ /app/tests/
 
-CMD ["uv", "run", ".venv/bin/pytest", "--durations=0", "-v", "/app/tests/"]
+CMD ["uv", "run", ".venv/bin/pytest", "--durations=0", "--verbose", "/app/tests/"]
