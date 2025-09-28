@@ -1,4 +1,6 @@
-FROM ghcr.io/astral-sh/uv:0.8.17-python3.13-trixie-slim
+FROM python:3.13-slim-trixie
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+#FROM ghcr.io/astral-sh/uv:0.8.17-python3.13-trixie-slim
 
 # Java is required for PySpark
 RUN apt-get update && \
@@ -8,14 +10,14 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-# RUN uv venv && uv pip install pytest pyspark==4.0.1
+ENV SPARK_VERSION=4.0.1
+ENV PYSPARK_PYTHON=.venv/bin/python
+
 RUN uv init && \
-    uv add pytest pyspark==4.0.1 && \
+    uv add pytest pyspark==${SPARK_VERSION} && \
     uv sync
 
-ENV PYSPARK_PYTHON=.venv/bin/python
-ENV SPARK_VERSION=4.0.1
 
-COPY tests/ /app/tests/
+COPY tests/ tests/
 
-CMD ["uv", "run", ".venv/bin/pytest", "--durations=0", "--verbose", "/app/tests/"]
+CMD ["uv", "run", ".venv/bin/pytest", "--durations=0", "--verbose", "tests/"]
